@@ -8,20 +8,26 @@ class RationalNumber
 {
 
 private:
+	//Fields
 	int numerator;
 	int denominator;
-
-	static tuple<int, int> Simplify(int a, int b);
+	int *ptr;	
 
 public:
+	//Constructors
+	RationalNumber();
+	RationalNumber(const RationalNumber& obj);
 	RationalNumber(int a, int b);	
-	string ToString();
+	virtual ~RationalNumber();
+	
+	//Members
+	string ToString(bool simplify = true);
 
+	//Properties
 	int GetNumerator() { return numerator; }
 	int GetDenominator() { return denominator; }
 
-	virtual ~RationalNumber();
-
+	//Operator Overloads
 	RationalNumber operator+(const RationalNumber & right)
 	{
 		int aCrossMultipliedNumerator = this -> numerator * right.denominator;
@@ -58,9 +64,9 @@ public:
 		return rationalNumber;
 	}
 
+	//Class Functions
 	static int FindGreatestCommonDevisor(int a, int b);
+	static tuple<int, int> Simplify(int a, int b);
 	
-protected:
-	RationalNumber();
 };
 
