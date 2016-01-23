@@ -4,7 +4,7 @@
 
 using namespace std;
 
-class RationalNumber
+class Rational
 {
 
 private:
@@ -15,10 +15,10 @@ private:
 
 public:
 	//Constructors
-	RationalNumber();
-	RationalNumber(const RationalNumber& obj);
-	RationalNumber(int a, int b);	
-	virtual ~RationalNumber();
+	Rational();
+	Rational(const Rational& obj);
+	Rational(int a, int b);	
+	virtual ~Rational();
 	
 	//Members
 	string ToString(bool simplify = true);
@@ -28,38 +28,38 @@ public:
 	int GetDenominator() { return denominator; }
 
 	//Operator Overloads
-	RationalNumber operator+(const RationalNumber & right)
+	Rational operator+(const Rational & right)
 	{
 		int aCrossMultipliedNumerator = this -> numerator * right.denominator;
 		int bCrossMultipliedNumerator = right.numerator * this -> denominator;
 		int crossMultipledDenominator = this -> denominator * right.denominator;
 
-		RationalNumber rationalNumber((aCrossMultipliedNumerator + bCrossMultipliedNumerator), crossMultipledDenominator);
+		Rational rationalNumber((aCrossMultipliedNumerator + bCrossMultipliedNumerator), crossMultipledDenominator);
 
 		return rationalNumber;
 	}
 
-	RationalNumber operator-(const RationalNumber & right)
+	Rational operator-(const Rational & right)
 	{
 		int aCrossMultipliedNumerator = this->numerator * right.denominator;
 		int bCrossMultipliedNumerator = right.numerator * this->denominator;
 		int crossMultipledDenominator = this->denominator * right.denominator;
 
-		RationalNumber rationalNumber((aCrossMultipliedNumerator - bCrossMultipliedNumerator), crossMultipledDenominator);
+		Rational rationalNumber((aCrossMultipliedNumerator - bCrossMultipliedNumerator), crossMultipledDenominator);
 
 		return rationalNumber;
 	}
 
-	RationalNumber operator*(const RationalNumber & right)
+	Rational operator*(const Rational & right)
 	{
-		RationalNumber rationalNumber((this -> numerator * right.numerator), (this -> denominator * right.denominator));
+		Rational rationalNumber((this -> numerator * right.numerator), (this -> denominator * right.denominator));
 
 		return rationalNumber;
 	}
 
-	RationalNumber operator/(const RationalNumber & right)
+	Rational operator/(const Rational & right)
 	{
-		RationalNumber rationalNumber((this->numerator * right.denominator), (this->denominator * right.numerator));
+		Rational rationalNumber((this->numerator * right.denominator), (this->denominator * right.numerator));
 
 		return rationalNumber;
 	}

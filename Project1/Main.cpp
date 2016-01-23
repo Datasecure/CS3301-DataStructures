@@ -5,21 +5,32 @@ using namespace std;
 
 int main()
 {
-	RationalNumber number1(2, 4);
-	RationalNumber number2(3, 7);
+	Rational number1(3, 8);
+	Rational number2(1, 6);
+	Rational number3(1, 2);
+	Rational number4(2, 5);
 
-	cout << number1.ToString() << endl;
-	cout << number2.ToString() << endl;
-
-	RationalNumber add = number1 + number2;
-	RationalNumber mult = number1 * number2;
-	RationalNumber sub = number1 - number2;
-	RationalNumber div = number1 / number2;
+	Rational add = number1 + number2;
+	Rational sub = number3 - number2;
+	Rational mult = number1 - number4;
+	Rational div = number1 / number2;
 
 	cout << add.ToString() << endl;
-	cout << mult.ToString() << endl;
 	cout << sub.ToString() << endl;
+	cout << mult.ToString() << endl;
 	cout << div.ToString() << endl;
+
+	Rational x;
+
+	cout << x.ToString() << endl;
+
+	Rational y(4, 5);
+
+	cout << y.ToString() << endl;
+
+	Rational z = y;
+
+	cout << z.ToString() << endl;
 
 	cin.get();
 
