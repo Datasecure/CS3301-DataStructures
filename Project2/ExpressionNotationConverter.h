@@ -6,13 +6,12 @@ using namespace std;
 
 class ExpressionNotationConverter
 {
-private:
-	static bool IsOperator(char c);
-public:
-	//Constructors
-	ExpressionNotationConverter();
-	virtual ~ExpressionNotationConverter();
+	//Fields
+	static const int OPERAND = -1;
 
+	static int DeterminePrecidence(char c);
+
+public:
 	//Members
 	static string ConvertInfixToPostfix(string expression);
 };

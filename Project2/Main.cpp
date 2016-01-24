@@ -7,6 +7,8 @@ int main()
 {
 
 	cout << ExpressionNotationConverter::ConvertInfixToPostfix("3+7") << endl;
+	cout << ExpressionNotationConverter::ConvertInfixToPostfix("3+7*2") << endl;
+	cout << ExpressionNotationConverter::ConvertInfixToPostfix("(3+7)*2") << endl;
 
 	cin.get();
 

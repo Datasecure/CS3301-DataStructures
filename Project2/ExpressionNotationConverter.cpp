@@ -1,35 +1,33 @@
 #include "ExpressionNotationConverter.h"
 
 
-bool ExpressionNotationConverter::IsOperator(char c)
+int ExpressionNotationConverter::DeterminePrecidence(char c)
 {
-	bool value;
+	auto precedence = -1;
 
 	switch (c)
 	{
-		case '+':
-		case '-':
-		case '*':
-		case '/':
-		case '(':
-		case ')':
-		case '^':
-		case '%':
-			value = true;
-			break;
-		default:
-			value = false;
-			break;
+	case '(':
+		precedence = 0;
+		break;
+	case '+':
+	case '-':
+		precedence = 1;
+		break;
+	case '*':
+	case '/':
+	case '%':
+		precedence = 2;
+		break;
+	case '^':
+		precedence = 3;
+		break;
+	default:
+		precedence = -1;
+		break;
 	}
-	return value;
-}
 
-ExpressionNotationConverter::ExpressionNotationConverter()
-{
-}
-
-ExpressionNotationConverter::~ExpressionNotationConverter()
-{
+	return precedence;
 }
 
 
@@ -41,24 +39,30 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 	for (int i = 0; i < expression.length(); i++)
 	{
 		auto c = expression[i];
+		auto currPrecedence = DeterminePrecidence(c);
 
-		if (IsOperator(c))
-		{
-			stack.Push(expression[i]);
-		}
-		else
+		if (currPrecedence == OPERAND)
 		{
 			str += string(1, c) + " ";
 		}
+		else
+		{
+			while (stack.Count() > 0 && DeterminePrecidence(stack.Peek()) >= currPrecedence)
+			{
+				auto operand = stack.Pop();
+
+				str += string(1, operand) + " ";
+			}
+
+			stack.Push(expression[i]);
+		}
 	}
 
-	auto stackCount = stack.Count();
-
-	for (int i = 0; i < stackCount; i++)
+	while (!stack.IsEmpty())
 	{
 		auto c = char(stack.Pop());
 
-		str = str + c;
+		str += string(1, c) + " ";
 	}
 
 	return str;
