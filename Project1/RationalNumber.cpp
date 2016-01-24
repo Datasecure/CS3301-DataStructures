@@ -1,15 +1,16 @@
 #include "RationalNumber.h"
 
-Rational::Rational() { }
+Rational::Rational(): numerator(0), denominator(0), ptr(nullptr)
+{ }
 
-Rational::Rational(const Rational & obj)
+Rational::Rational(const Rational & obj): ptr(nullptr)
 {
 	this->numerator = obj.numerator;
 	this->denominator = obj.denominator;
 }
 
 
-Rational::Rational(int a, int b)
+Rational::Rational(int a, int b): ptr(nullptr)
 {
 	if (b == 0)
 		throw invalid_argument("Second argument cannot be 0");
@@ -19,7 +20,7 @@ Rational::Rational(int a, int b)
 }
 
 
-string Rational::ToString(bool simplify)
+string Rational::ToString(bool simplify) const
 {
 	string output = "";
 
@@ -29,7 +30,7 @@ string Rational::ToString(bool simplify)
 	}
 	else if (simplify)
 	{
-		tuple<int, int> simplifiedRational = Simplify(numerator, denominator);
+		auto simplifiedRational = Simplify(numerator, denominator);
 
 		output = to_string(get<0>(simplifiedRational)) + "/" + to_string(get<1>(simplifiedRational));
 	}
@@ -50,7 +51,7 @@ int Rational::FindGreatestCommonDevisor(int a, int b)
 
 tuple<int, int> Rational::Simplify(int a, int b)
 {
-	int gcd = FindGreatestCommonDevisor(a, b);
+	auto gcd = FindGreatestCommonDevisor(a, b);
 
 	return make_tuple(a / gcd, b / gcd);
 }
