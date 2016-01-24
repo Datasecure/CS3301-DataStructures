@@ -6,17 +6,15 @@ using namespace std;
 
 void Stack::ResizeArray(int size)
 {
-	auto newArr = new int[size];
+	auto tmpArr = arr;
+	arr = new int[size];
 
-	for (auto i = 0; i < count; i++)
+	for (unsigned i = 0; i < count; i++)
 	{
-		newArr[i] = this->arr[i];
+		arr[i] = tmpArr[i];
 	}
 
-	delete [] this->arr;
-
-	top = count;
-	arr = newArr;
+	delete [] tmpArr;	
 }
 
 Stack::Stack()
@@ -30,7 +28,7 @@ Stack::Stack()
 
 Stack::~Stack()
 {
-	if (this->arr) delete [] this->arr;
+	if (arr) delete [] arr;
 }
 
 bool Stack::IsEmpty() const
@@ -40,13 +38,13 @@ bool Stack::IsEmpty() const
 
 void Stack::Push(int number)
 {
-	if (++top > size)
+	if (top + 1 >= size)
 	{
 		size *= 2;
 		ResizeArray(size);
 	}
 
-	arr[top] = number;
+	arr[++top] = number;
 	count++;
 }
 
@@ -57,14 +55,14 @@ int Stack::Pop()
 		throw logic_error("The stack is empty.");
 	}
 
-	auto value = arr[top--];
-	count--;
-
 	if (top > 2 && top < size / 4)
 	{
 		size /= 2;
 		ResizeArray(size);
 	}
+
+	auto value = arr[top--];
+	count--;
 
 	return value;
 }
