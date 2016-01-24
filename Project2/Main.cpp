@@ -1,29 +1,12 @@
 #include <iostream>
-#include "Stack.h"
+#include "ExpressionNotationConverter.h"
 
 using namespace std;
 
 int main()
 {
-	Stack stack;
 
-	stack.Push(4);
-	stack.Push(3);
-	stack.Push(2);
-	stack.Push(0);
-
-	cout << stack.Pop() << endl;
-	cout << stack.Pop() << endl;
-	cout << stack.Pop() << endl;
-
-	stack.Push(13);
-	stack.Push(23);
-	stack.Push(12);
-
-	cout << stack.Pop() << endl;
-	cout << stack.Pop() << endl;
-	cout << stack.Pop() << endl;
-	cout << stack.Pop() << endl;
+	cout << ExpressionNotationConverter::ConvertInfixToPostfix("3+7") << endl;
 
 	cin.get();
 

@@ -15,6 +15,7 @@ class Stack
 public:
 	//Constructors
 	Stack();
+	Stack(const Stack& obj);
 	virtual ~Stack();
 
 	//Members
@@ -22,5 +23,9 @@ public:
 	void Push(int number);
 	int Pop();
 	int Peek() const;
+
+	//Properties
+	int Count() const
+	{ return count; }
 };
 

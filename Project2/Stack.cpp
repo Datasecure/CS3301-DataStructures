@@ -25,6 +25,13 @@ Stack::Stack()
 	this->arr = new int[size];
 }
 
+Stack::Stack(const Stack& obj)
+{
+	arr = obj.arr;
+	top = obj.top;
+	size = obj.size;
+	count = obj.count;
+}
 
 Stack::~Stack()
 {
