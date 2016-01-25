@@ -1,6 +1,5 @@
 #include "ExpressionNotationConverter.h"
 
-
 int ExpressionNotationConverter::DeterminePrecidence(char c)
 {
 	auto precedence = -1;
@@ -21,6 +20,9 @@ int ExpressionNotationConverter::DeterminePrecidence(char c)
 		break;
 	case '^':
 		precedence = 3;
+		break;
+	case ')':
+		precedence = 4;
 		break;
 	default:
 		precedence = -1;
@@ -45,16 +47,34 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 		{
 			str += string(1, c) + " ";
 		}
-		else
+		else if (c == '(')
 		{
-			while (stack.Count() > 0 && DeterminePrecidence(stack.Peek()) >= currPrecedence)
+			stack.Push(c);
+		}
+		else if (c ==')')
+		{
+			while (!stack.IsEmpty() && stack.Peek() != 0)
 			{
 				auto operand = stack.Pop();
-
-				str += string(1, operand) + " ";
+				
+				if (operand != '(' && operand != ')')
+				{
+					str += string(1, operand) + " ";
+				}
+			}
+		}
+		else
+		{
+			while (!stack.IsEmpty() && stack.Peek() != 0 && DeterminePrecidence(stack.Peek()) >= currPrecedence)
+			{
+				auto operand = stack.Pop();
+				if (operand != '(' && operand != ')')
+				{
+					str += string(1, operand) + " ";
+				}
 			}
 
-			stack.Push(expression[i]);
+			stack.Push(c);
 		}
 	}
 
@@ -62,7 +82,10 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 	{
 		auto c = char(stack.Pop());
 
-		str += string(1, c) + " ";
+		if (c != '(' && c != ')')
+		{
+			str += string(1, c) + " ";
+		}
 	}
 
 	return str;
