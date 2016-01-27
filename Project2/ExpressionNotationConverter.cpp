@@ -1,3 +1,4 @@
+#include <cmath>
 #include "ExpressionNotationConverter.h"
 
 int ExpressionNotationConverter::DeterminePrecidence(char c)
@@ -26,60 +27,113 @@ int ExpressionNotationConverter::DeterminePrecidence(char c)
 	return precedence;
 }
 
+int ExpressionNotationConverter::ApplyOperation(char cOperator, int lhs, int rhs)
+{
+	int result;
+
+	switch (cOperator)
+	{
+	case '+':
+		result = lhs + rhs;
+		break;
+	case '-':
+		result = lhs - rhs;
+		break;
+	case '*':
+		result = lhs * rhs;
+		break;
+	case '/':
+		if (rhs == 0)
+			throw logic_error("Invalid expression. Division by zero.");
+
+		result = lhs / rhs;
+		break;
+	case '%':
+		if (rhs == 0)
+			throw logic_error("Invalid expression. Division by zero.");
+
+		result = lhs % rhs;
+		break;
+	case '^':
+		result = pow(lhs, rhs);
+		break;
+	default:
+		throw logic_error("Unsupported operator");
+		break;
+	}
+
+	return result;
+}
 
 string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 {
-	Stack stack;
+	Stack operatorStack;
+	Stack operandStack;
 	string str = "";
+	string::size_type strSize;
 
 	for (int i = 0; i < expression.length(); i++)
 	{
-		auto c = expression[i];
-		auto currPrecedence = DeterminePrecidence(c);
+		auto character = expression[i];
+		auto currentCharacterPrecedence = DeterminePrecidence(character);
 
-		if (c == '(')
+		if (character == '(')
 		{
-			stack.Push(c);
+			operatorStack.Push(character);
 		}
-		else if (c ==')')
+		else if (character ==')')
 		{
-			while (!stack.IsEmpty() && stack.Peek() != '(')
+			while (!operatorStack.IsEmpty() && operatorStack.Peek() != '(')
 			{
-				auto operand = stack.Pop();
+				auto currentOperator = operatorStack.Pop();				
+				auto lhs = operandStack.Pop();
+				auto rhs = operandStack.Pop();
+
+				operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
 				
-				if (operand != '(' && operand != ')')
+				if (currentOperator != '(' && currentOperator != ')')
 				{
-					str += string(1, operand) + " ";
+					str += string(1, currentOperator) + " ";
 				}
 			}
 
-			stack.Pop();
+			operatorStack.Pop();
 		}
-		else if (currPrecedence == OPERAND)
+		else if (currentCharacterPrecedence == OPERAND)
 		{
-			str += string(1, c) + " ";
+			auto characterAsInt = stoi(string(1, character), &strSize, 10);
+
+			operandStack.Push(characterAsInt);
+			str += string(1, character) + " ";
 		}
 		else
 		{
-			while (!stack.IsEmpty() && currPrecedence <= DeterminePrecidence(stack.Peek()))
+			while (!operatorStack.IsEmpty() && currentCharacterPrecedence <= DeterminePrecidence(operatorStack.Peek()))
 			{
-				auto operand = stack.Pop();
+				auto currentOperator = operatorStack.Pop();
 
-				if (operand != '(' && operand != ')')
-				{
-					str += string(1, operand) + " ";
+				if (currentOperator != '(' && currentOperator != ')')
+				{					
+					auto lhs = operandStack.Pop();
+					auto rhs = operandStack.Pop();
+
+					operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
+
+					str += string(1, currentOperator) + " ";
 				}
 			}
 
-			stack.Push(c);
+			operatorStack.Push(character);
 		}
 	}
 
-	while (!stack.IsEmpty())
+	while (!operatorStack.IsEmpty())
 	{
-		auto c = char(stack.Pop());
+		auto currentOperator = operatorStack.Pop();
+		auto lhs = operandStack.Pop();
+		auto rhs = operandStack.Pop();
 
-		if (c == '(' || c == ')')
+		if (currentOperator == '(' || currentOperator == ')')
 		{
 			str = "Invalid Expression!";
 
@@ -87,9 +141,16 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 		}
 		else
 		{
-			str += string(1, c) + " ";
+			operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
+
+			str += string(1, currentOperator) + " ";
 		}
 	}
 
-	return str;
+	if (str == "Invalid Expression!")
+		return str;
+
+	auto result = operandStack.Pop();
+
+	return str += " : " + to_string(result);
 }

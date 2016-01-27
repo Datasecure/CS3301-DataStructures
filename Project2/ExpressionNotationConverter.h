@@ -11,6 +11,8 @@ class ExpressionNotationConverter
 
 	static int DeterminePrecidence(char c);
 
+	static int ApplyOperation(char cOperator, int lfs, int rhs);
+
 public:
 	//Members
 	static string ConvertInfixToPostfix(string expression);
