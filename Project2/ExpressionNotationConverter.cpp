@@ -6,9 +6,6 @@ int ExpressionNotationConverter::DeterminePrecidence(char c)
 
 	switch (c)
 	{
-	case '(':
-		precedence = 0;
-		break;
 	case '+':
 	case '-':
 		precedence = 1;
@@ -19,10 +16,7 @@ int ExpressionNotationConverter::DeterminePrecidence(char c)
 		precedence = 2;
 		break;
 	case '^':
-		precedence = 3;
-		break;
-	case ')':
-		precedence = 4;
+		precedence = 3;		
 		break;
 	default:
 		precedence = -1;
@@ -43,17 +37,13 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 		auto c = expression[i];
 		auto currPrecedence = DeterminePrecidence(c);
 
-		if (currPrecedence == OPERAND)
-		{
-			str += string(1, c) + " ";
-		}
-		else if (c == '(')
+		if (c == '(')
 		{
 			stack.Push(c);
 		}
 		else if (c ==')')
 		{
-			while (!stack.IsEmpty() && stack.Peek() != 0)
+			while (!stack.IsEmpty() && stack.Peek() != '(')
 			{
 				auto operand = stack.Pop();
 				
@@ -62,12 +52,19 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 					str += string(1, operand) + " ";
 				}
 			}
+
+			stack.Pop();
+		}
+		else if (currPrecedence == OPERAND)
+		{
+			str += string(1, c) + " ";
 		}
 		else
 		{
-			while (!stack.IsEmpty() && stack.Peek() != 0 && DeterminePrecidence(stack.Peek()) >= currPrecedence)
+			while (!stack.IsEmpty() && currPrecedence <= DeterminePrecidence(stack.Peek()))
 			{
 				auto operand = stack.Pop();
+
 				if (operand != '(' && operand != ')')
 				{
 					str += string(1, operand) + " ";
@@ -82,7 +79,13 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 	{
 		auto c = char(stack.Pop());
 
-		if (c != '(' && c != ')')
+		if (c == '(' || c == ')')
+		{
+			str = "Invalid Expression!";
+
+			break;
+		}
+		else
 		{
 			str += string(1, c) + " ";
 		}
