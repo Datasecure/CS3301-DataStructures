@@ -9,9 +9,9 @@ class ExpressionNotationConverter
 	//Fields
 	static const int OPERAND = -1;
 
-	static int DeterminePrecidence(char c);
+	static int DeterminePrecidence(string str);
 
-	static int ApplyOperation(char cOperator, int lfs, int rhs);
+	static int ApplyOperation(string sOperator, int lfs, int rhs);
 
 public:
 	//Members

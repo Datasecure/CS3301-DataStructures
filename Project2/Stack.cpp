@@ -7,9 +7,9 @@ using namespace std;
 void Stack::ResizeArray(int size)
 {
 	auto tmpArr = arr;
-	arr = new int[size];
+	arr = new string[size];
 
-	for (unsigned i = 0; i < count; i++)
+	for (auto i = 0; i < count; i++)
 	{
 		arr[i] = tmpArr[i];
 	}
@@ -22,7 +22,7 @@ Stack::Stack()
 	this->top = -1;
 	this->count = 0;
 	this->size = 2;
-	this->arr = new int[size];
+	this->arr = new string[size];
 }
 
 Stack::Stack(const Stack& obj)
@@ -43,7 +43,7 @@ bool Stack::IsEmpty() const
 	return count == 0;
 }
 
-void Stack::Push(int number)
+void Stack::Push(string str)
 {
 	if (top + 1 >= size)
 	{
@@ -51,11 +51,11 @@ void Stack::Push(int number)
 		ResizeArray(size);
 	}
 
-	arr[++top] = number;
+	arr[++top] = str;
 	count++;
 }
 
-int Stack::Pop()
+string Stack::Pop()
 {
 	if (IsEmpty() || top < 0)
 	{
@@ -74,7 +74,7 @@ int Stack::Pop()
 	return value;
 }
 
-int Stack::Peek() const
+string Stack::Peek() const
 {
 	if (IsEmpty())
 	{

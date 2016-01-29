@@ -1,110 +1,108 @@
 #include <cmath>
 #include "ExpressionNotationConverter.h"
+#include <iostream>
 
-int ExpressionNotationConverter::DeterminePrecidence(char c)
+int ExpressionNotationConverter::DeterminePrecidence(string str)
 {
-	auto precedence = -1;
+	if (str == "+" || str == "-") return 1;
+	if (str == "*" || str == "/" || str == "%") return 2;
+	if (str == "^") return 3;
 
-	switch (c)
+	for (unsigned i = 0; i < str.length(); i++)
 	{
-	case '+':
-	case '-':
-		precedence = 1;
-		break;
-	case '*':
-	case '/':
-	case '%':
-		precedence = 2;
-		break;
-	case '^':
-		precedence = 3;		
-		break;
-	default:
-		precedence = -1;
-		break;
+		if (!isdigit(str[i]))
+			logic_error("An unsupported operator or invalid number passed.");
 	}
 
-	return precedence;
+	return -1;
 }
 
-int ExpressionNotationConverter::ApplyOperation(char cOperator, int lhs, int rhs)
+int ExpressionNotationConverter::ApplyOperation(string sOperator, int lhs, int rhs)
 {
-	int result;
+	if (sOperator == "+") return lhs + rhs;
+	if (sOperator == "-") return lhs - rhs;
+	if (sOperator == "*") return lhs * rhs;
+	if (sOperator == "^") return pow(lhs, rhs);
 
-	switch (cOperator)
+	if (sOperator == "/")
 	{
-	case '+':
-		result = lhs + rhs;
-		break;
-	case '-':
-		result = lhs - rhs;
-		break;
-	case '*':
-		result = lhs * rhs;
-		break;
-	case '/':
 		if (rhs == 0)
 			throw logic_error("Invalid expression. Division by zero.");
-
-		result = lhs / rhs;
-		break;
-	case '%':
-		if (rhs == 0)
-			throw logic_error("Invalid expression. Division by zero.");
-
-		result = lhs % rhs;
-		break;
-	case '^':
-		result = pow(lhs, rhs);
-		break;
-	default:
-		throw logic_error("Unsupported operator");
-		break;
+		return lhs / rhs;
 	}
 
-	return result;
+	if (sOperator == "%")
+	{
+		if (rhs == 0)
+			throw logic_error("Invalid expression. Division by zero.");
+		return lhs % rhs;
+	}
+
+	throw logic_error("Unsupported operator.");
 }
 
 string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 {
 	Stack operatorStack;
 	Stack operandStack;
-	string str = "";
-	string::size_type strSize;
+	string outputString = "";
 
-	for (int i = 0; i < expression.length(); i++)
+	auto tmp = expression;
+
+	while (tmp.length() > 0)
 	{
-		auto character = expression[i];
-		auto currentCharacterPrecedence = DeterminePrecidence(character);
+		auto strLength = tmp.length();
+		auto numberToSkip = 0;
+		auto skip = 1;
 
-		if (character == '(')
+		do
 		{
-			operatorStack.Push(character);
+			auto tmp1 = tmp.substr(numberToSkip, 1);
+
+			if (!isdigit(tmp1[0]))
+				break;
+
+			numberToSkip++;
+		} while (numberToSkip - 1 < strLength);
+
+		if (numberToSkip > 0)
+		{
+			skip = numberToSkip;
 		}
-		else if (character ==')')
-		{
-			while (!operatorStack.IsEmpty() && operatorStack.Peek() != '(')
-			{
-				auto currentOperator = operatorStack.Pop();				
-				auto lhs = operandStack.Pop();
-				auto rhs = operandStack.Pop();
 
-				operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
-				
-				if (currentOperator != '(' && currentOperator != ')')
+		auto subString = tmp.substr(0, strLength - (strLength - skip));
+		auto currentCharacterPrecedence = DeterminePrecidence(subString);
+
+		if (subString == "(")
+		{
+			operatorStack.Push(subString);
+		}
+		else if (subString == ")")
+		{
+			while (!operatorStack.IsEmpty() && operatorStack.Peek() != "(")
+			{
+				auto currentOperator = operatorStack.Pop();
+				auto lhs = stoi(operandStack.Pop());
+				auto rhs = stoi(operandStack.Pop());
+				auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
+
+				/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
+
+				operandStack.Push(result);
+
+				if (currentOperator != "(" && currentOperator != ")")
 				{
-					str += string(1, currentOperator) + " ";
+					outputString += currentOperator + " ";
 				}
 			}
 
-			operatorStack.Pop();
+			auto paren = operatorStack.Pop();
 		}
 		else if (currentCharacterPrecedence == OPERAND)
 		{
-			auto characterAsInt = stoi(string(1, character), &strSize, 10);
+			operandStack.Push(subString);
 
-			operandStack.Push(characterAsInt);
-			str += string(1, character) + " ";
+			outputString += subString + " ";
 		}
 		else
 		{
@@ -112,45 +110,54 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 			{
 				auto currentOperator = operatorStack.Pop();
 
-				if (currentOperator != '(' && currentOperator != ')')
-				{					
-					auto lhs = operandStack.Pop();
-					auto rhs = operandStack.Pop();
+				outputString += currentOperator + " ";
 
-					operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
+				if (currentOperator != "(" && currentOperator != ")")
+				{
+					auto lhs = stoi(operandStack.Pop());
+					auto rhs = stoi(operandStack.Pop());
+					auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
 
-					str += string(1, currentOperator) + " ";
+					/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
+
+					operandStack.Push(result);
 				}
 			}
 
-			operatorStack.Push(character);
+			operatorStack.Push(subString);
 		}
+
+		tmp = string(tmp.substr(skip));
 	}
 
 	while (!operatorStack.IsEmpty())
 	{
 		auto currentOperator = operatorStack.Pop();
-		auto lhs = operandStack.Pop();
-		auto rhs = operandStack.Pop();
 
-		if (currentOperator == '(' || currentOperator == ')')
+		if (currentOperator == "(" || currentOperator == ")")
 		{
-			str = "Invalid Expression!";
+			outputString = "Invalid Expression!";
 
 			break;
 		}
-		else
-		{
-			operandStack.Push(ApplyOperation(currentOperator, lhs, rhs));
 
-			str += string(1, currentOperator) + " ";
-		}
+		auto lhs = stoi(operandStack.Pop());
+		auto rhs = stoi(operandStack.Pop());
+		auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
+
+		/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
+
+		operandStack.Push(result);
+
+		outputString += currentOperator + " ";
 	}
 
-	if (str == "Invalid Expression!")
-		return str;
+	if (outputString == "Invalid Expression!")
+	{
+		return outputString;
+	}
 
 	auto result = operandStack.Pop();
 
-	return str += " : " + to_string(result);
+	return outputString += " : " + result;
 }

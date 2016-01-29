@@ -6,7 +6,7 @@ using namespace std;
 class Stack
 {
 	//Fields
-	int* arr;
+	string* arr;
 	int count;
 	int size;
 	int top;
@@ -20,9 +20,9 @@ public:
 
 	//Members
 	bool IsEmpty() const;
-	void Push(int number);
-	int Pop();
-	int Peek() const;
+	void Push(string str);
+	string Pop();
+	string Peek() const;
 
 	//Properties
 	int Count() const
