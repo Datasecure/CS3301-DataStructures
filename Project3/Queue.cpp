@@ -22,10 +22,14 @@ bool Queue::IsEmpty() const
 
 void Queue::Enqueue(int number)
 {
+	if (count == 8)
+	{
+		throw logic_error("The queue is full.");
+	}
+	
 	if (tail > 7)
 	{
 		tail = 0;
-		//throw logic_error("The queue is full.");
 	}
 
 	array[tail++] = number;
