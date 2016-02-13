@@ -19,23 +19,23 @@ int ExpressionNotationConverter::DeterminePrecidence(string str)
 
 int ExpressionNotationConverter::ApplyOperation(string sOperator, int lhs, int rhs)
 {
-	if (sOperator == "+") return lhs + rhs;
-	if (sOperator == "-") return lhs - rhs;
-	if (sOperator == "*") return lhs * rhs;
-	if (sOperator == "^") return pow(lhs, rhs);
+	if (sOperator == "+") return rhs + lhs;
+	if (sOperator == "-") return rhs - lhs;
+	if (sOperator == "*") return rhs * lhs;
+	if (sOperator == "^") return pow(rhs, lhs);
 
 	if (sOperator == "/")
 	{
-		if (rhs == 0)
+		if (lhs == 0)
 			throw logic_error("Invalid expression. Division by zero.");
-		return lhs / rhs;
+		return rhs / lhs;
 	}
 
 	if (sOperator == "%")
 	{
-		if (rhs == 0)
+		if (lhs == 0)
 			throw logic_error("Invalid expression. Division by zero.");
-		return lhs % rhs;
+		return rhs % lhs;
 	}
 
 	throw logic_error("Unsupported operator.");
@@ -86,8 +86,6 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 				auto rhs = stoi(operandStack.Pop());
 				auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
 
-				/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
-
 				operandStack.Push(result);
 
 				if (currentOperator != "(" && currentOperator != ")")
@@ -118,8 +116,6 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 					auto rhs = stoi(operandStack.Pop());
 					auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
 
-					/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
-
 					operandStack.Push(result);
 				}
 			}
@@ -144,8 +140,6 @@ string ExpressionNotationConverter::ConvertInfixToPostfix(string expression)
 		auto lhs = stoi(operandStack.Pop());
 		auto rhs = stoi(operandStack.Pop());
 		auto result = to_string(ApplyOperation(currentOperator, lhs, rhs));
-
-		/*cout << to_string(lhs) + currentOperator + to_string(rhs) + " = " + result << endl;*/
 
 		operandStack.Push(result);
 
