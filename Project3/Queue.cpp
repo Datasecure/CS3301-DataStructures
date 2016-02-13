@@ -43,6 +43,11 @@ int Queue::Dequeue()
 		throw logic_error("The queue is empty.");
 	}
 
+	if (head == 8)
+	{
+		head = 0;
+	}
+
 	count--;
 	return array[head++];
 }
