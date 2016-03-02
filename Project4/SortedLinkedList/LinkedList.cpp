@@ -98,7 +98,10 @@ void LinkedList::Delete(int data) {
             currNode = currNode -> Next;
         }
         
-        if (prevNode == nullptr) {
+        if (currNode == nullptr) {
+            //Nothing to delete; no-op
+        }
+        else if (prevNode == nullptr) {
             head = currNode -> Next;
         }
         else {

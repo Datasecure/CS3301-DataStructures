@@ -53,5 +53,6 @@ int main(int argc, const char * argv[]) {
     cout << "Finished" << endl;
     
     cin.get();
+    
     return 0;
 }
