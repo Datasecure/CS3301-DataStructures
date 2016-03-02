@@ -35,8 +35,12 @@ public:
         return count;
     }
     
-    void operator=(const LinkedList &obj) {
-        count = obj.count;
-        head = obj.head;
+    LinkedList operator=(const LinkedList &obj) {
+        return LinkedList(obj);
     }
+    
+//    void operator=(const LinkedList &obj) {
+//        head = obj.head;
+//        count = obj.count;
+//    }
 };
