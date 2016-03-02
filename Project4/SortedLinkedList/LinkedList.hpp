@@ -24,6 +24,7 @@ private:
     
 public:
     LinkedList();
+    LinkedList(const LinkedList &obj);
     virtual ~LinkedList();
     
     void Add(int data);
@@ -32,5 +33,10 @@ public:
     int Length() const
     {
         return count;
+    }
+    
+    void operator=(const LinkedList &obj) {
+        count = obj.count;
+        head = obj.head;
     }
 };

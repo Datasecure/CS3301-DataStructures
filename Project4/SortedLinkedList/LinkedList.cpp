@@ -12,14 +12,18 @@
 
 using namespace std;
 
-LinkedList::LinkedList()
-{
+LinkedList::LinkedList() {
     count = 0;
     head = nullptr;
 }
 
-LinkedList::~LinkedList()
-{
+LinkedList::LinkedList(const LinkedList &obj) {
+    count = obj.count;
+    head = obj.head;
+}
+
+
+LinkedList::~LinkedList() {
     Node* currNode = head;
     
     while (currNode != nullptr) {
@@ -30,6 +34,7 @@ LinkedList::~LinkedList()
     head = nullptr;
     count = 0;
 }
+
 
 void LinkedList::Print() {
     Node* node = head;
@@ -74,6 +79,7 @@ void LinkedList::Add(int data) {
     
     count++;
 }
+
 
 void LinkedList::Delete(int data) {
     if (Length() == 0) {
