@@ -33,18 +33,35 @@ struct BinaryTreeNode {
 class BinarySearchTree {
     
 private:
+    int size;
+    int rootIndex;
+    bool isEmpty() const;
+    
     BinaryTreeNode nodeArray[MAX_NODES];
     
     string inorderTraversal();
     string preorderTraversal();
     string postOrderTraversal();
     
+    static int findHelper(BinarySearchTree bst, int value) ;
+    
+    
+    inline static BinaryTreeNode createNode(int data) {
+        auto node = BinaryTreeNode();
+        
+        node.data = data;
+        node.leftndex = -1;
+        node.rightIndex = -1;
+        
+        return node;
+    };
+    
 public:
     BinarySearchTree();
     BinarySearchTree(const BinarySearchTree &obj);
     ~BinarySearchTree();
     
-    int Find(int value);
+    int Find(int value) const;
     int FindMin();
     int FindMax();
     void Insert(int data);
