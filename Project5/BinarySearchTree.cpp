@@ -1,22 +1,37 @@
 #include "BinarySearchTree.h"
 
-int BinarySearchTree::insertHelper(int index, int data)
+int BinarySearchTree::insertHelper(int index, int prevIndex, int data)
 {
-	auto currNode = nodeArray[index];
+	BinaryTreeNode nodeToInsert;
 
-	if (currNode.data < 0)
+	if (index == -1)
 	{
-		nodeArray[index] = createNode(data);
+		nodeToInsert = createNode(data);
+
+		auto prevNode = nodeArray[prevIndex];
+
+		if (data > prevNode.data)
+		{
+			nodeArray[prevIndex].rightIndex = index;
+		}
+		else
+		{
+			nodeArray[prevIndex].leftndex = index;
+		}
+
+		nodeArray[index] = nodeToInsert;
 
 		return index;
 	}
 
+	auto currNode = nodeArray[index];
+
 	if (data > currNode.data)
 	{
-		return insertHelper(currNode.rightIndex, data);
+		return insertHelper(currNode.rightIndex, index, data);
 	}
 
-	return insertHelper(currNode.leftndex, data);
+	return insertHelper(currNode.leftndex, index, data);
 }
 
 int BinarySearchTree::deleteHelper(int index, int value)
@@ -124,7 +139,7 @@ void BinarySearchTree::Insert(int data)
 	}
 	else
 	{
-		insertHelper(rootIndex, data);
+		insertHelper(rootIndex, -1, data);
 	}
 }
 

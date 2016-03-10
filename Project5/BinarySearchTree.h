@@ -31,7 +31,7 @@ private :
 	string postOrderTraversal(int index, string str = "") const;
 
 	int findHelper(int index, int value) const;
-	int insertHelper(int index, int data);
+	int insertHelper(int index, int prevIndex, int data);
 	int deleteHelper(int index, int value);
 
 	static BinaryTreeNode createNode(int data) {
