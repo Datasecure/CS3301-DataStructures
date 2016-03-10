@@ -19,15 +19,16 @@ struct BinaryTreeNode {
 
 class BinarySearchTree
 {
+private :
+	BinaryTreeNode nodeArray[MAX_NODES];
 	int size;
 	int rootIndex;
+
 	bool isEmpty() const;
 
-	BinaryTreeNode nodeArray[MAX_NODES];
-
-	string inorderTraversal();
-	string preorderTraversal();
-	string postOrderTraversal();
+	string inorderTraversal(int index, string str = "") const;
+	string preorderTraversal(int index, string str = "") const;
+	string postOrderTraversal(int index, string str = "") const;
 
 	int findHelper(int index, int value) const;
 	int insertHelper(int index, int data);
@@ -36,9 +37,14 @@ class BinarySearchTree
 	static BinaryTreeNode createNode(int data) {
 		auto node = BinaryTreeNode();
 
+		if (data < 0)
+		{
+			data = 0;
+		}
+
 		node.data = data;
-		node.leftndex = NULL;
-		node.rightIndex = NULL;
+		node.leftndex = -1;
+		node.rightIndex = -1;
 
 		return node;
 	};
@@ -54,18 +60,24 @@ public:
 	void Insert(int data);
 	void Delete(int data);
 
-	string Traversal(TraversalType traversal) {
+	string Traverse(TraversalType traversal) const
+	{
+		if (isEmpty() || rootIndex == -1)
+		{
+			return "";
+		}
+
 		string result;
 
 		switch (traversal) {
 		case Inorder:
-			result = inorderTraversal();
+			result = inorderTraversal(rootIndex);
 			break;
 		case Preorder:
-			result = preorderTraversal();
+			result = preorderTraversal(rootIndex);
 			break;
 		case Postorder:
-			result = postOrderTraversal();
+			result = postOrderTraversal(rootIndex);
 			break;
 		default:
 			result = "";

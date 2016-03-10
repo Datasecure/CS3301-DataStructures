@@ -4,7 +4,7 @@ int BinarySearchTree::insertHelper(int index, int data)
 {
 	auto currNode = nodeArray[index];
 
-	if (currNode.data == NULL)
+	if (currNode.data < 0)
 	{
 		nodeArray[index] = createNode(data);
 
@@ -46,16 +46,52 @@ int BinarySearchTree::findHelper(int index, int value) const
 	return -1;
 }
 
-string BinarySearchTree::preorderTraversal()
+string BinarySearchTree::preorderTraversal(int index, string str) const
 {
+	if (index < 0)
+	{
+		return str;
+	}
+
+	auto node = nodeArray[index];
+
+	str += to_string(node.data);
+	preorderTraversal(node.leftndex, str);
+	preorderTraversal(node.rightIndex, str);
+
+	return str;
 }
 
-string BinarySearchTree::inorderTraversal()
+string BinarySearchTree::inorderTraversal(int index, string str) const
 {
+	if (index < 0)
+	{
+		return str;
+	}
+
+	auto node = nodeArray[index];
+
+	inorderTraversal(node.leftndex, str);
+	str += to_string(node.data);
+	inorderTraversal(node.rightIndex, str);
+
+	return str;
 }
 
-string BinarySearchTree::postOrderTraversal()
+string BinarySearchTree::postOrderTraversal(int index, string str) const
 {
+	if (index < 0)
+	{
+		return str;
+	}
+
+	auto node = nodeArray[index];
+
+	postOrderTraversal(node.leftndex, str);
+	postOrderTraversal(node.rightIndex, str);
+	str += to_string(node.data);
+
+	return str;
 }
 
 bool BinarySearchTree::isEmpty() const
@@ -106,7 +142,7 @@ int BinarySearchTree::FindMax() const
 
 	auto currIndex = rootIndex;
 
-	while (nodeArray[currIndex].rightIndex != NULL)
+	while (nodeArray[currIndex].rightIndex != -1)
 	{
 		currIndex = nodeArray[currIndex].rightIndex;
 	}
@@ -128,7 +164,7 @@ int BinarySearchTree::FindMin() const
 
 	auto currIndex = rootIndex;
 
-	while (nodeArray[currIndex].rightIndex != NULL)
+	while (nodeArray[currIndex].rightIndex != -1)
 	{
 		currIndex = nodeArray[currIndex].leftndex;
 	}
