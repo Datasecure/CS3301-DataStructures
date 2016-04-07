@@ -1,117 +1,39 @@
 #include "BinarySearchTree.h"
+#include <iostream>
 
-int BinarySearchTree::insertHelper(int index, int prevIndex, int data)
+void BinarySearchTree::preorderTraversal(int index) const
 {
-	BinaryTreeNode nodeToInsert;
+	if (_data[index] < 0)
+		return;
 
-	if (index == -1)
-	{
-		nodeToInsert = createNode(data);
-
-		auto prevNode = nodeArray[prevIndex];
-
-		if (data > prevNode.data)
-		{
-			nodeArray[prevIndex].rightIndex = index;
-		}
-		else
-		{
-			nodeArray[prevIndex].leftndex = index;
-		}
-
-		nodeArray[index] = nodeToInsert;
-
-		return index;
-	}
-
-	auto currNode = nodeArray[index];
-
-	if (data > currNode.data)
-	{
-		return insertHelper(currNode.rightIndex, index, data);
-	}
-
-	return insertHelper(currNode.leftndex, index, data);
+	cout << to_string(_data[index]) << " ";
+	preorderTraversal(2 * index + 1);
+	preorderTraversal(2 * index + 2);
 }
 
-int BinarySearchTree::deleteHelper(int index, int value)
+void BinarySearchTree::inorderTraversal(int index) const
 {
-	return 0;
+	if (_data[index] < 0)
+		return;
+
+	inorderTraversal(2 * index + 1);
+	cout << to_string(_data[index]) << " ";
+	inorderTraversal(2 * index + 2);
 }
 
-int BinarySearchTree::findHelper(int index, int value) const
+void BinarySearchTree::postOrderTraversal(int index) const
 {
-	auto currNode = nodeArray[index];
+	if (_data[index] < 0)
+		return;
 
-	if (value == currNode.data)
-	{
-		return index;
-	}
-
-	if (value > currNode.data)
-	{
-		return findHelper(currNode.rightIndex, value);
-	}
-
-	if (value <= currNode.data)
-	{
-		return findHelper(currNode.leftndex, value);
-	}
-
-	return -1;
-}
-
-string BinarySearchTree::preorderTraversal(int index, string str) const
-{
-	if (index < 0)
-	{
-		return str;
-	}
-
-	auto node = nodeArray[index];
-
-	str += to_string(node.data);
-	preorderTraversal(node.leftndex, str);
-	preorderTraversal(node.rightIndex, str);
-
-	return str;
-}
-
-string BinarySearchTree::inorderTraversal(int index, string str) const
-{
-	if (index < 0)
-	{
-		return str;
-	}
-
-	auto node = nodeArray[index];
-
-	inorderTraversal(node.leftndex, str);
-	str += to_string(node.data);
-	inorderTraversal(node.rightIndex, str);
-
-	return str;
-}
-
-string BinarySearchTree::postOrderTraversal(int index, string str) const
-{
-	if (index < 0)
-	{
-		return str;
-	}
-
-	auto node = nodeArray[index];
-
-	postOrderTraversal(node.leftndex, str);
-	postOrderTraversal(node.rightIndex, str);
-	str += to_string(node.data);
-
-	return str;
+	postOrderTraversal(2 * index + 1);
+	postOrderTraversal(2 * index + 2);
+	cout << to_string(_data[index]) << " ";
 }
 
 bool BinarySearchTree::isEmpty() const
 {
-	return size <= 0;
+	return _data[0] < 0;
 }
 
 BinarySearchTree::BinarySearchTree(const BinarySearchTree& obj)
@@ -120,27 +42,42 @@ BinarySearchTree::BinarySearchTree(const BinarySearchTree& obj)
 
 BinarySearchTree::BinarySearchTree()
 {
-	size = 0;
-	rootIndex = -1;
+	for (auto i = 0; i < MAX_NODES; i++) {
+		_data[i] = -1;
+	}
 }
 
 void BinarySearchTree::Delete(int data)
 {
-	deleteHelper(rootIndex, data);
+	return;
 }
 
-void BinarySearchTree::Insert(int data)
+bool BinarySearchTree::Insert(int data)
 {
-	if (isEmpty())
+	auto currIndex = 0;
+
+	while (_data[0] > -1)
 	{
-		rootIndex = 0;
-		nodeArray[rootIndex] = createNode(data);
-		size++;
+		if (currIndex >= MAX_NODES)
+			return false;
+
+		if (_data[currIndex] < 0)
+			break;
+
+		if (data <= _data[currIndex])
+		{
+			currIndex = 2 * currIndex + 1;
+		}
+		else
+		{
+			currIndex = 2 * currIndex + 2;
+		}
 	}
-	else
-	{
-		insertHelper(rootIndex, -1, data);
-	}
+
+	_data[currIndex] = data;
+	size++;
+
+	return true;
 }
 
 int BinarySearchTree::FindMax() const
@@ -150,16 +87,14 @@ int BinarySearchTree::FindMax() const
 		return -1;
 	}
 
-	if (size == 1)
-	{
-		return rootIndex;
-	}
+	auto currIndex = 0;
 
-	auto currIndex = rootIndex;
-
-	while (nodeArray[currIndex].rightIndex != -1)
+	while (true)
 	{
-		currIndex = nodeArray[currIndex].rightIndex;
+		if (_data[currIndex] < 0)
+			break;
+
+		currIndex = 2 * currIndex + 2;
 	}
 
 	return currIndex;
@@ -172,16 +107,14 @@ int BinarySearchTree::FindMin() const
 		return -1;
 	}
 
-	if (size == 1)
-	{
-		return rootIndex;
-	}
+	auto currIndex = 0;
 
-	auto currIndex = rootIndex;
-
-	while (nodeArray[currIndex].rightIndex != -1)
+	while (true)
 	{
-		currIndex = nodeArray[currIndex].leftndex;
+		if (_data[currIndex] < 0)
+			break;
+
+		currIndex = 2 * currIndex + 1;
 	}
 
 	return currIndex;
@@ -189,7 +122,32 @@ int BinarySearchTree::FindMin() const
 
 int BinarySearchTree::Find(int value) const
 {
-	return findHelper(rootIndex, value);
+	if (isEmpty())
+	{
+		return -1;
+	}
+
+	auto currIndex = 0;
+
+	while (_data[currIndex] > -1)
+	{
+		auto currValue = _data[currIndex];
+
+		if (value <= currValue)
+		{
+			currIndex = 2 * currIndex + 1;
+		}
+		else if (value > currValue)
+		{
+			currIndex = 2 * currIndex + 2;
+		}
+		else if (value == currValue)
+		{
+			return currIndex;
+		}
+	}
+
+	return -1;
 }
 
 BinarySearchTree::~BinarySearchTree()
