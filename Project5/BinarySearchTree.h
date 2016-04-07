@@ -10,15 +10,16 @@ enum TraversalType {
 };
 
 #define MAX_NODES 100
+#define LEFT_CHILD 0
+#define RIGHT_CHILD 1
 
 class BinarySearchTree
 {
 private :
 	int _data[MAX_NODES];
-	int size;
 
+	static tuple<int, int> getChildren(int index);
 	bool isEmpty() const;
-
 	void inorderTraversal(int index) const;
 	void preorderTraversal(int index) const;
 	void postOrderTraversal(int index) const;
@@ -32,7 +33,7 @@ public:
 	int FindMin() const;
 	int FindMax() const;
 	bool Insert(int data);
-	void Delete(int data);
+	bool Delete(int data);
 
 	void Traverse(TraversalType traversal) const
 	{

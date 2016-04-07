@@ -1,4 +1,5 @@
 #include "BinarySearchTree.h"
+#include <tuple>
 #include <iostream>
 
 void BinarySearchTree::preorderTraversal(int index) const
@@ -6,9 +7,11 @@ void BinarySearchTree::preorderTraversal(int index) const
 	if (_data[index] < 0)
 		return;
 
+	auto children = getChildren(index);
+
 	cout << to_string(_data[index]) << " ";
-	preorderTraversal(2 * index + 1);
-	preorderTraversal(2 * index + 2);
+	preorderTraversal(get<LEFT_CHILD>(children));
+	preorderTraversal(get<RIGHT_CHILD>(children));
 }
 
 void BinarySearchTree::inorderTraversal(int index) const
@@ -16,28 +19,32 @@ void BinarySearchTree::inorderTraversal(int index) const
 	if (_data[index] < 0)
 		return;
 
-	inorderTraversal(2 * index + 1);
+	auto children = getChildren(index);
+
+	inorderTraversal(get<LEFT_CHILD>(children));
 	cout << to_string(_data[index]) << " ";
-	inorderTraversal(2 * index + 2);
+	inorderTraversal(get<RIGHT_CHILD>(children));
 }
 
 void BinarySearchTree::postOrderTraversal(int index) const
 {
 	if (_data[index] < 0)
 		return;
+	auto children = getChildren(index);
 
-	postOrderTraversal(2 * index + 1);
-	postOrderTraversal(2 * index + 2);
+	postOrderTraversal(get<LEFT_CHILD>(children));
+	postOrderTraversal(get<RIGHT_CHILD>(children));
 	cout << to_string(_data[index]) << " ";
+}
+
+tuple<int, int> BinarySearchTree::getChildren(int index)
+{
+	return make_tuple(2 * index + 1, 2 * index + 2);
 }
 
 bool BinarySearchTree::isEmpty() const
 {
 	return _data[0] < 0;
-}
-
-BinarySearchTree::BinarySearchTree(const BinarySearchTree& obj)
-{
 }
 
 BinarySearchTree::BinarySearchTree()
@@ -47,9 +54,44 @@ BinarySearchTree::BinarySearchTree()
 	}
 }
 
-void BinarySearchTree::Delete(int data)
+BinarySearchTree::BinarySearchTree(const BinarySearchTree& obj)
 {
-	return;
+	for (auto i = 0; i < MAX_NODES; i++) {
+		_data[i] = obj._data[i];
+	}
+}
+
+BinarySearchTree::~BinarySearchTree()
+{
+}
+
+bool BinarySearchTree::Delete(int data)
+{
+	if (isEmpty())
+		return false;
+
+	auto index = Find(data);
+	auto children = getChildren(index);
+
+	if (index < 0)
+	{
+		return false;
+	}
+
+
+	if (_data[get<LEFT_CHILD>(children)] < 0 && _data[get<RIGHT_CHILD>(children)] < 0)	//Leaf node
+	{
+		_data[index] = -1;
+	}
+	else if (data == 0)	//One child
+	{
+	}
+	else //Two children
+	{
+	}
+
+	return true;
+
 }
 
 bool BinarySearchTree::Insert(int data)
@@ -64,18 +106,19 @@ bool BinarySearchTree::Insert(int data)
 		if (_data[currIndex] < 0)
 			break;
 
+		auto children = getChildren(currIndex);
+
 		if (data <= _data[currIndex])
 		{
-			currIndex = 2 * currIndex + 1;
+			currIndex = get<LEFT_CHILD>(children);
 		}
 		else
 		{
-			currIndex = 2 * currIndex + 2;
+			currIndex = get<RIGHT_CHILD>(children);
 		}
 	}
 
 	_data[currIndex] = data;
-	size++;
 
 	return true;
 }
@@ -94,7 +137,7 @@ int BinarySearchTree::FindMax() const
 		if (_data[currIndex] < 0)
 			break;
 
-		currIndex = 2 * currIndex + 2;
+		currIndex = get<RIGHT_CHILD>(getChildren(currIndex));
 	}
 
 	return currIndex;
@@ -114,7 +157,7 @@ int BinarySearchTree::FindMin() const
 		if (_data[currIndex] < 0)
 			break;
 
-		currIndex = 2 * currIndex + 1;
+		currIndex = get<LEFT_CHILD>(getChildren(currIndex));
 	}
 
 	return currIndex;
@@ -132,24 +175,20 @@ int BinarySearchTree::Find(int value) const
 	while (_data[currIndex] > -1)
 	{
 		auto currValue = _data[currIndex];
+		auto children = getChildren(currIndex);
 
+		if (value == currValue)
+			return currIndex;
+		
 		if (value <= currValue)
 		{
-			currIndex = 2 * currIndex + 1;
+			currIndex = get<LEFT_CHILD>(children);
 		}
-		else if (value > currValue)
+		else
 		{
-			currIndex = 2 * currIndex + 2;
-		}
-		else if (value == currValue)
-		{
-			return currIndex;
+			currIndex = get<RIGHT_CHILD>(children);
 		}
 	}
 
 	return -1;
-}
-
-BinarySearchTree::~BinarySearchTree()
-{
 }
