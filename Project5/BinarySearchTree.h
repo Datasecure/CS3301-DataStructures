@@ -18,11 +18,13 @@ class BinarySearchTree
 private :
 	int _data[MAX_NODES];
 
-	static tuple<int, int> getChildren(int index);
+	static tuple<int, int> getChildIndexes(int index);
+	tuple<int, int> getChildren(int index) const;
 	bool isEmpty() const;
 	void inorderTraversal(int index) const;
 	void preorderTraversal(int index) const;
 	void postOrderTraversal(int index) const;
+	int deleteHelper(int index, int data);
 
 public:
 	BinarySearchTree();
@@ -30,8 +32,8 @@ public:
 	virtual ~BinarySearchTree();
 
 	int Find(int value) const;
-	int FindMin() const;
-	int FindMax() const;
+	int FindMin(int index = 0) const;
+	int FindMax(int index = 0) const;
 	bool Insert(int data);
 	bool Delete(int data);
 

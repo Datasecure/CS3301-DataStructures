@@ -22,5 +22,9 @@ int main()
 	cout << to_string(bst.FindMin()) << endl;
 	cout << to_string(bst.FindMax()) << endl;
 
+	bst.Delete(3);
+	bst.Traverse(Inorder);
+	cout << endl;
+
 	cin.get();
 }
