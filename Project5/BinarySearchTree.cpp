@@ -50,11 +50,11 @@ int BinarySearchTree::deleteHelper(int root, int data)
 
 	if (data < _data[root])
 	{	
-		_data[leftChildIndex] = deleteHelper(leftChildIndex, data);
+		deleteHelper(leftChildIndex, data);
 	}
 	else if (data > _data[root])
 	{
-		_data[rightChildIndex] = deleteHelper(rightChildIndex, data);
+		deleteHelper(rightChildIndex, data);
 	}
 	else
 	{

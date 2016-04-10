@@ -10,6 +10,8 @@ int main()
 	bst.Insert(3); 
 	bst.Insert(1);
 	bst.Insert(5);
+	bst.Insert(4);
+	bst.Insert(7);
 
 	bst.Traverse(Inorder);
 	cout << endl;
@@ -23,7 +25,7 @@ int main()
 	cout << to_string(bst.FindMax()) << endl;
 
 	bst.Delete(3);
-	bst.Traverse(Inorder);
+	bst.Traverse(Preorder);
 	cout << endl;
 
 	cin.get();
