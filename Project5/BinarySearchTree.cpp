@@ -37,51 +37,66 @@ void BinarySearchTree::postOrderTraversal(int index) const
 	cout << to_string(_data[index]) << " ";
 }
 
-int BinarySearchTree::deleteHelper(int root, int data)
+int BinarySearchTree::deleteHelper(int index, int data)
 {
-	if (root >= MAX_NODES || _data[root] < 0)
+	if (index >= MAX_NODES || _data[index] < 0)
 	{
-		return root;
+		return index;
 	}
 
-	auto indexChildren = getChildIndexes(root);
+	auto indexChildren = getChildIndexes(index);
 	auto leftChildIndex = get<LEFT_CHILD>(indexChildren);
 	auto rightChildIndex = get<RIGHT_CHILD>(indexChildren);
 
-	if (data < _data[root])
+	if (data < _data[index])
 	{	
 		deleteHelper(leftChildIndex, data);
 	}
-	else if (data > _data[root])
+	else if (data > _data[index])
 	{
 		deleteHelper(rightChildIndex, data);
 	}
 	else
 	{
-		auto children = getChildren(root);
+		auto children = getChildren(index);
 		auto leftChild = get<LEFT_CHILD>(children);
 		auto rightChild = get<RIGHT_CHILD>(children); 
 
 		if (leftChild < 0 && rightChild < 0)	//Leaf node
 		{
-			_data[root] = -1;
+			_data[index] = -1;
 		}
 		else if ((leftChild >= 0 && rightChild < 0) || (leftChild < 0 && rightChild >= 0))	//One child
 		{
-			//Move up
+			auto tmp = _data[index];
+
+			if (leftChild > 0)
+			{
+				_data[index] = leftChild;
+				_data[leftChildIndex] = tmp;
+
+				deleteHelper(leftChildIndex, data);
+			}
+			else
+			{
+				_data[index] = rightChild;
+				_data[rightChildIndex] = tmp;
+
+				deleteHelper(rightChildIndex, data);
+			}
 		}
 		else //Two children
 		{
-			auto indexOfMin = FindMin(get<RIGHT_CHILD>(getChildIndexes(root)));
-			auto tmp = _data[root] = data;
-			_data[root] = _data[indexOfMin];
+			auto indexOfMin = FindMin(get<RIGHT_CHILD>(getChildIndexes(index)));
+			auto tmp = _data[index] = data;
+			_data[index] = _data[indexOfMin];
 			_data[indexOfMin] = tmp;
 
 			deleteHelper(rightChildIndex, data);
 		}
 	}	
 
-	return root;
+	return index;
 }
 
 tuple<int, int> BinarySearchTree::getChildIndexes(int index)
