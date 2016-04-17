@@ -184,7 +184,7 @@ bool BinarySearchTree::Insert(int data)
 	return true;
 }
 
-int BinarySearchTree::FindMax(int index) const
+int BinarySearchTree::findMaxHelper(int index) const
 {
 	if (isEmpty())
 	{
@@ -199,7 +199,7 @@ int BinarySearchTree::FindMax(int index) const
 	return index;
 }
 
-int BinarySearchTree::FindMin(int index) const
+int BinarySearchTree::findMinHelper(int index) const
 {
 	if (isEmpty())
 	{
@@ -213,6 +213,18 @@ int BinarySearchTree::FindMin(int index) const
 
 	return index;
 }
+
+int BinarySearchTree::FindMin(int index) const
+{
+	return _data[findMinHelper(index)];
+}
+
+int BinarySearchTree::FindMax(int index) const
+{
+	return _data[findMaxHelper(index)];
+}
+
+
 
 int BinarySearchTree::Find(int value) const
 {

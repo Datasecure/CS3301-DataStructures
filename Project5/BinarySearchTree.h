@@ -25,6 +25,8 @@ private :
 	void preorderTraversal(int index) const;
 	void postOrderTraversal(int index) const;
 	int deleteHelper(int index, int data);
+	int findMinHelper(int index = 0) const;
+	int findMaxHelper(int index = 0) const;
 
 public:
 	BinarySearchTree();
