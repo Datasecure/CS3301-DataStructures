@@ -3,19 +3,9 @@
 
 using namespace std;
 
-void print(vector<int> *a, int n)
-{
-	int i = 0;
-	while (i < n) {
-		std::cout << a->at(i) << ",";
-		i++;
-	}
-	std::cout << "\n";
-}
-
 inline int Partition(vector<int> *xs, int left, int right)
 {
-	int midPoint = (right - left) / 2;
+	int midPoint = (right + left) / 2;
 	int pivot = xs->at(midPoint);
 
 	swap((*xs)[left], (*xs)[midPoint]);
@@ -34,9 +24,11 @@ inline int Partition(vector<int> *xs, int left, int right)
 		}
 	}
 
-	swap((*xs)[l - 1], (*xs)[left]);
+	l--;
 
-	return l - 1;
+	swap((*xs)[l], (*xs)[left]); //Swap back to proper position
+
+	return l;
 }
 
 inline void QuickSort(vector<int> *xs, int left, int right) {
@@ -44,8 +36,6 @@ inline void QuickSort(vector<int> *xs, int left, int right) {
 		return;
 
 	int partition = Partition(xs, left, right);
-	std::cout << "QSC:" << left << "," << right << " part=" << partition << "\n";
-	print(xs, xs->size());
 
 	QuickSort(xs, left, partition - 1);
 	QuickSort(xs, partition + 1, right);

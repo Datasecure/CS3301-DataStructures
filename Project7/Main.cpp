@@ -17,7 +17,7 @@ void WriteToFile(string file, vector<int> data)
 
 int main()
 {
-	ifstream file("C:\\code\\DataStructures\\Project7\\testdata.txt");
+	ifstream file("C:\\code\\DataStructures\\Project7\\sortingdata.txt");
 	string str;
 
 	auto v = vector<int>();
