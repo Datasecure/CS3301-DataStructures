@@ -71,7 +71,7 @@ inline void Merge(vector<int> *xs, int head, int midpoint, int tail)
 		mergeIdx++;
 	}
 
-	while (leftIdx < leftCount)	
+	while (leftIdx <= leftCount)	
 		(*xs)[mergeIdx++] = left[leftIdx++];
 
 	while (rightIdx < rightCount)
