@@ -17,25 +17,32 @@ void WriteToFile(string file, vector<int> data)
 
 int main()
 {
-	ifstream file("C:\\code\\DataStructures\\Project7\\sortingdata.txt");
+	ifstream file("C:\\code\\DataStructures\\Project7\\testdata.txt");
 	string str;
 
-	auto v = vector<int>();
-
+	auto v1 = vector<int>();
+	
 	while (getline(file, str))
 	{
-		v.push_back(stoi(str));
+		v1.push_back(stoi(str));
 	}
+
+	auto v2 = v1;
 
 	clock_t start;
 
 	start = clock();
-	QuickSort(&v, 0, v.size() - 1);
+	QuickSort(&v1, 0, v1.size() - 1);
 	printf("Quick Sort: %2.2f\n", (clock() - start) / double(CLOCKS_PER_SEC));
+
+	start = clock();
+	MergeSort(&v2, 0, v1.size() - 1);
+	printf("Merge Sort: %2.2f\n", (clock() - start) / double(CLOCKS_PER_SEC));
 
 	cout << "Writing..." << endl;
 
-	WriteToFile("C:\\code\\DataStructures\\Project7\\quicksorted.txt", v);
+	WriteToFile("C:\\code\\DataStructures\\Project7\\quicksorted.txt", v1);
+	WriteToFile("C:\\code\\DataStructures\\Project7\\mergesorted.txt", v2);
 
 	cout << "Finished." << endl;
 	cin.get();
