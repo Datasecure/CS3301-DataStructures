@@ -39,12 +39,9 @@ int main()
 	MergeSort(&v2, 0, v1.size() - 1);
 	printf("Merge Sort: %2.2f\n", (clock() - start) / double(CLOCKS_PER_SEC));
 
-	cout << "Writing..." << endl;
-
 	WriteToFile("C:\\code\\DataStructures\\Project7\\quicksorted.txt", v1);
 	WriteToFile("C:\\code\\DataStructures\\Project7\\mergesorted.txt", v2);
 
-	cout << "Finished." << endl;
 	cin.get();
 
 	return 0;
